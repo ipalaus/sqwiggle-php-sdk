@@ -4,7 +4,7 @@ namespace Ipalaus\Sqwiggle;
 
 use Guzzle\Http\Message\Request;
 
-class BaseAuthentication implements AuthenticationInterface
+class BasicAuthentication implements AuthenticationInterface
 {
 
     /**
@@ -15,7 +15,7 @@ class BaseAuthentication implements AuthenticationInterface
     protected $token;
 
     /**
-     * Create a new HTTP Base Authentication instance.
+     * Create a new HTTP Basic Authentication instance.
      *
      * @param  string  $token  Client token.
      */
