@@ -50,6 +50,21 @@ class Room
     public $created_at;
 
     /**
+     * Create a new Room instance.
+     *
+     * @param array $room Room details.
+     */
+    public function __construct(array $room = array())
+    {
+        $this->id = $room['id'];
+        $this->user_id = $room['user_id'];
+        $this->name = $room['name'];
+        $this->path = $room['path'];
+
+        $this->setCreatedAt($room['created_at']);
+    }
+
+    /**
      * Create a DateTime object from the 'created_at' string.
      *
      * @param  string  $created_at  Datetime string.

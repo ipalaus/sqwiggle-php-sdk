@@ -11,7 +11,7 @@ class Client
     /**
      * @const  VERSION  Current version of the SDK
      */
-    const VERSION = '1.0.0';
+    const VERSION = '0.0.1';
 
     /**
      * Endpoint base URL.
@@ -37,43 +37,67 @@ class Client
         $this->auth = $auth;
     }
 
-    public function createRoom($name)
-    {
-        return $this->send($this->getHttp()->post('rooms', null, array('name' => $name)));
-    }
-
     /**
      * Returns a list of all rooms in the current organization. The rooms are
      * returned in sorted alphabetical order by default.
      *
-     * @return  array  List of Room objects.
+     * @return array List of Room objects.
      */
     public function getRooms()
     {
-        $rooms = $this->send($this->getHttp()->get('rooms'));
+        $rooms = $this->get('rooms');
 
-        $items = array();
+        $items = new Collection;
 
         foreach ($rooms as $room) {
-            $item = new Room;
-
-            $item->id = $room['id'];
-            $item->user_id = $room['user_id'];
-            $item->name = $room['name'];
-            $item->setCreatedAt($room['created_at']);
-            $item->path = $room['path'];
-            $item->user_count = $room['user_count'];
-
-            $items[] = $item;
+            $items[] = new Room($room);
         }
 
         return $items;
     }
 
     /**
+     * Create a Room.
+     *
+     * @param  string $name Create a Room.
+     *
+     * @return Ipalaus\Sqwiggle\Room
+     */
+    public function createRoom($name)
+    {
+        return new Room($this->post('rooms', array('name' => $name)));
+    }
+
+    /**
+     * Retrieves the details of any room that the token has access to.
+     *
+     * @param  integer $id Room id.
+     *
+     * @return Ipalaus\Sqwiggle\Room
+     */
+    public function getRoom($id)
+    {
+        return new Room($this->get('rooms/'.$id));
+    }
+
+    /**
+     * Updates the specified room by setting the values of the parameters passed.
+     *
+     * @param  integer $id   ID of the room object to update.
+     * @param  string  $name The rooms display name.
+     *
+     * @return Ipalaus\Sqwiggle\Room
+     */
+    public function updateRoom($id, $name)
+    {
+        return new Room($this->put('rooms/'.$id, array('name' => $name)));
+    }
+
+    /**
      * Send an authorized request and the response as an array.
      *
-     * @param  \Guzzle\Http\Message\Request  $request
+     * @param Guzzle\Http\Message\Request $request HTTP request class to send requests.
+     *
      * @return array
      */
     protected function send(Request $request)
@@ -104,6 +128,46 @@ class Client
         }
 
         return $response;
+    }
+
+    /**
+     * Create a GET request for the client.
+     *
+     * @param  string $uri Resource URI.
+     *
+     * @return array
+     */
+    protected function get($uri)
+    {
+        return $this->send($this->getHttp()->get($uri));
+    }
+
+    /**
+     * Create a POST request for the client.
+     *
+     * @param  string $uri      Resource URI.
+     * @param  array  $postBody Associative array of POST fields to send in the body of the request.
+     * @param  array  $headers  HTTP headers.
+     *
+     * @return array
+     */
+    protected function post($uri, $postBody, $headers = null)
+    {
+        return $this->send($this->getHttp()->post($uri, $headers, $postBody));
+    }
+
+    /**
+     * Create a PUT request for the client.
+     *
+     * @param  string $uri     Resource URI.
+     * @param  array  $body    Body to send in the request.
+     * @param  array  $headers HTTP headers
+     *
+     * @return array
+     */
+    protected function put($uri, $body, $headers = null)
+    {
+        return $this->send($this->getHttp()->put($uri, $headers, $body));
     }
 
     /**

@@ -1,14 +1,14 @@
 <?php
 
 use Ipalaus\Sqwiggle\Client;
-use Ipalaus\Sqwiggle\BaseAuthentication;
+use Ipalaus\Sqwiggle\BasicAuthentication;
 
 class ClientTest extends PHPUnit_Framework_TestCase
 {
 
     public function testGetHttp()
     {
-        $client = new Client(new BaseAuthentication('ipalaus'));
+        $client = new Client(new BasicAuthentication('ipalaus'));
 
         $method = $this->getMethod('getHttp');
         $return = $method->invokeArgs($client, array());
