@@ -2,11 +2,7 @@
 
 namespace Ipalaus\Sqwiggle;
 
-use Exceptions\AuthenticationException;
-use Exceptions\AuthorizationException;
-use Exceptions\InvalidParametersException;
-use Exceptions\LimitReachedException;
-use Exceptions\UnknownParametersException;
+use Guzzle\Http\Exception\ClientErrorResponseException;
 use Guzzle\Http\Message\Request;
 
 class Client
@@ -82,9 +78,32 @@ class Client
      */
     protected function send(Request $request)
     {
-        $request = $this->auth->addCredentialsToRequest($request);
+        try {
+            $request = $this->auth->addCredentialsToRequest($request);
+            $response = $request->send()->json();
+        } catch (ClientErrorResponseException $e) {
+            $response = $e->getResponse();
+            $statusCode = $response->getStatusCode();
+            $body = $response->json();
 
-        return $request->send()->json();
+            switch ($statusCode) {
+                case 401:
+                    throw new Exceptions\AuthenticationException($body['message']);
+                case 402:
+                    throw new Exceptions\PaymentRequiredException($body['message']);
+                case 403:
+                    throw new Exceptions\AuthorizationException($body['message']);
+                case 404:
+                    throw new Exceptions\NotFoundException($body['message']);
+                case 500:
+                    throw new Exceptions\ServerErrorException($body['message']);
+                default:
+                    $exception = new Exceptions\BadResponseException($body);
+                    throw $exception;
+            }
+        }
+
+        return $response;
     }
 
     /**
