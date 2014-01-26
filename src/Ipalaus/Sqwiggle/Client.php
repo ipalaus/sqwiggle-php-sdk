@@ -83,6 +83,8 @@ class Client
     /**
      * Updates the specified room by setting the values of the parameters passed.
      *
+     * @todo Fix the PUT rooms/:id endpoint.
+     *
      * @param  integer $id   ID of the room object to update.
      * @param  string  $name The rooms display name.
      *
@@ -91,6 +93,18 @@ class Client
     public function updateRoom($id, $name)
     {
         return new Room($this->put('rooms/'.$id, array('name' => $name)));
+    }
+
+    /**
+     * Removes the room from the organisation.
+     *
+     * @param  integer $id Room id.
+     *
+     * @return boolean
+     */
+    public function deleteRoom($id)
+    {
+        return $this->delete('rooms/'.$id);
     }
 
     /**
@@ -104,7 +118,9 @@ class Client
     {
         try {
             $request = $this->auth->addCredentialsToRequest($request);
-            $response = $request->send()->json();
+            $response = $request->send();
+            $statusCode = $response->getStatusCode();
+            $body = $response->json();
         } catch (ClientErrorResponseException $e) {
             $response = $e->getResponse();
             $statusCode = $response->getStatusCode();
@@ -122,12 +138,17 @@ class Client
                 case 500:
                     throw new Exceptions\ServerErrorException($body['message']);
                 default:
-                    $exception = new Exceptions\BadResponseException($body);
-                    throw $exception;
+                    throw new Exceptions\BadResponseException($body);
             }
         }
 
-        return $response;
+        // if a 204 No Content response is returned we return a confirmation
+        // that the requested action has been executed
+        if ($statusCode === 204) {
+            return true;
+        }
+
+        return $body;
     }
 
     /**
@@ -168,6 +189,18 @@ class Client
     protected function put($uri, $body, $headers = null)
     {
         return $this->send($this->getHttp()->put($uri, $headers, $body));
+    }
+
+    /**
+     * Create a DELETE request for the client.
+     *
+     * @param  string $uri Resource URI.
+     *
+     * @return boolean
+     */
+    protected function delete($uri)
+    {
+        return $this->send($this->getHttp()->delete($uri));
     }
 
     /**

@@ -39,5 +39,4 @@ class Collection implements ArrayAccess, Countable
         return count($this->items);
     }
 
-
 }
