@@ -8,7 +8,7 @@ class Organization
 {
 
     /**
-     * Room id.
+     * Organization id.
      *
      * @var  integer
      */
@@ -48,6 +48,22 @@ class Organization
      * @var  array
      */
     public $security;
+
+    /**
+     * Create a new Organization instance.
+     *
+     * @param array $organization Organization details.
+     */
+    public function __construct(array $organization = array())
+    {
+        $this->id = $organization['id'];
+        $this->name = $organization['name'];
+        $this->path = $organization['path'];
+        $this->billindg = $organization['billing'];
+        $this->security = $organization['security'];
+
+        $this->setCreatedAt($organization['created_at']);
+    }
 
     /**
      * Create a DateTime object from the 'created_at' string.

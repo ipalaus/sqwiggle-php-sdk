@@ -72,6 +72,49 @@ class Client
     }
 
     /**
+     * Retrieves the details of any organization that the token has access to.
+     *
+     * @param  integer $id Organization id.
+     *
+     * @return \Ipalaus\Sqwiggle\Organization
+     */
+    public function getOrganization($id)
+    {
+        return new Organization($this->get('organizations/'.$id));
+    }
+
+    /**
+     * Updates the specified organization name.
+     *
+     * @param  integer $id   Organization id.
+     * @param  string  $name New name.
+     *
+     * @return \Ipalaus\Sqwiggle\Organization
+     */
+    public function updateOrganization($id, $name)
+    {
+        return new Organization($this->put('organizations/'.$id, array('name' => $name)));
+    }
+
+    /**
+     * Returns a list of all organizations the current token has access to.
+     *
+     * @return \Ipalaus\Sqwiggle\Collection
+     */
+    public function getOrganizations()
+    {
+        $organizations = $this->get('organizations');
+
+        $items = new Collection;
+
+        foreach ($organizations as $organization) {
+            $items[] = new Organization($organization);
+        }
+
+        return $items;
+    }
+
+    /**
      * Returns a list of all rooms in the current organization. The rooms are
      * returned in sorted alphabetical order by default.
      *
@@ -95,7 +138,7 @@ class Client
      *
      * @param  string $name Create a Room.
      *
-     * @return Ipalaus\Sqwiggle\Room
+     * @return \Ipalaus\Sqwiggle\Room
      */
     public function createRoom($name)
     {
@@ -107,7 +150,7 @@ class Client
      *
      * @param  integer $id Room id.
      *
-     * @return Ipalaus\Sqwiggle\Room
+     * @return \Ipalaus\Sqwiggle\Room
      */
     public function getRoom($id)
     {
@@ -122,7 +165,7 @@ class Client
      * @param  integer $id   ID of the room object to update.
      * @param  string  $name The rooms display name.
      *
-     * @return Ipalaus\Sqwiggle\Room
+     * @return \Ipalaus\Sqwiggle\Room
      */
     public function updateRoom($id, $name)
     {
