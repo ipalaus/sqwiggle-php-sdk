@@ -42,4 +42,18 @@ class Conversation
      */
     public $participated;
 
+    /**
+     * Create a new Conversation instance.
+     *
+     * @param array $conversation Conversation details.
+     */
+    public function __construct(array $conversation = array())
+    {
+        $this->id = $conversation['id'];
+        $this->room_id = $conversation['room_id'];
+        $this->status = $conversation['status'];
+        $this->participating = $conversation['participating'];
+        $this->participated = $conversation['participated'];
+    }
+
 }

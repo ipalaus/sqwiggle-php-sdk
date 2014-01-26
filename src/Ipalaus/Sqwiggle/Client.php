@@ -38,6 +38,38 @@ class Client
     }
 
     /**
+     * Retrieves the details of a specific conversation provided the
+     * conversation is accessible via the provided token.
+     *
+     * @param  integer $id Conversation id.
+     *
+     * @return \Ipalaus\Sqwiggle\Conversation
+     */
+    public function getConversation($id)
+    {
+        return new Conversation($this->get('conversations/'.$id));
+    }
+
+    /**
+     * Returns a list of all conversations within the organization associated
+     * with the provided token. This includes both finished and ongoing.
+     *
+     * @return \Ipalaus\Sqwiggle\Collection
+     */
+    public function getConversations()
+    {
+        $conversations = $this->get('conversations');
+
+        $items = new Collection;
+
+        foreach ($conversations as $conversation) {
+            $items[] = new Conversation($conversation);
+        }
+
+        return $items;
+    }
+
+    /**
      * Returns configuration information for Sqwiggle clients, such as where to
      * store file uploads, limits, ice servers and other misc details that are
      * required.
