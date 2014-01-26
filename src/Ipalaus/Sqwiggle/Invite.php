@@ -50,6 +50,22 @@ class Invite
     public $created_at;
 
     /**
+     * Create a new Invite instance.
+     *
+     * @param array $invite Invite details.
+     */
+    public function __construct(array $invite = array())
+    {
+        $this->id = $invite['id'];
+        $this->from_id = $invite['from_id'];
+        $this->email = $invite['email'];
+        $this->avatar = $invite['avatar'];
+        $this->url = $invite['url'];
+
+        //$this->setCreatedAt($invite['created_at']);
+    }
+
+    /**
      * Create a DateTime object from the 'created_at' string.
      *
      * @param  string  $created_at  Datetime string.

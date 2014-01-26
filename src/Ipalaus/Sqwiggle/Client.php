@@ -72,6 +72,63 @@ class Client
     }
 
     /**
+     * When an invite is created an email is automatically sent to the
+     * recipients address asking them to join your organization.
+     *
+     * @param  string $email Email address that will receive the invite.
+     *
+     * @return \Ipalaus\Sqwiggle\Invite
+     */
+    public function createInvite($email)
+    {
+        return $this->post('invites', array('email' => $email));
+    }
+
+    /**
+     * Retrieves the details of any invite that has been previously created.
+     *
+     * @param  integer $id Invite id.
+     *
+     * @return \Ipalaus\Sqwiggle\Invite
+     */
+    public function getInvite($id)
+    {
+        return new Invite($this->get('invites/'.$id));
+    }
+
+    /**
+     * Removes the specified invite from the organization. This will result in
+     * the invite no longer working should the recipient click on the link
+     * contained in the invite email.
+     *
+     * @param  integer $id Invite id.
+     *
+     * @return boolean
+     */
+    public function deleteInvite($id)
+    {
+        return $this->delete('invites/'.$id);
+    }
+
+    /**
+     * Returns a list of all outstanging invites in the current organization.
+     *
+     * @return \Ipalaus\Sqwiggle\Collection
+     */
+    public function getInvites()
+    {
+        $invites = $this->get('invites');
+
+        $items = new Collection;
+
+        foreach ($invites as $invite) {
+            $items[] = new Invite($invite);
+        }
+
+        return $items;
+    }
+
+    /**
      * Retrieves the details of any organization that the token has access to.
      *
      * @param  integer $id Organization id.
