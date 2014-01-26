@@ -38,6 +38,40 @@ class Client
     }
 
     /**
+     * Returns configuration information for Sqwiggle clients, such as where to
+     * store file uploads, limits, ice servers and other misc details that are
+     * required.
+     *
+     * @return array
+     */
+    public function getConfigurationInfo()
+    {
+        return $this->get('info/configuration');
+    }
+
+    /**
+     * Returns the current versions of the official Sqwiggle clients across all
+     * platforms, this allows apps to auto-update when a new version is
+     * available.
+     *
+     * @return array
+     */
+    public function getVersionsInfo()
+    {
+        return $this->get('info/versions');
+    }
+
+    /**
+     * Returns the configuration and version details in a single request.
+     *
+     * @return array
+     */
+    public function getInfo()
+    {
+        return $this->get('info');
+    }
+
+    /**
      * Returns a list of all rooms in the current organization. The rooms are
      * returned in sorted alphabetical order by default.
      *
