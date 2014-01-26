@@ -115,25 +115,6 @@ class Client
     }
 
     /**
-     * Returns a list of all rooms in the current organization. The rooms are
-     * returned in sorted alphabetical order by default.
-     *
-     * @return array List of Room objects.
-     */
-    public function getRooms()
-    {
-        $rooms = $this->get('rooms');
-
-        $items = new Collection;
-
-        foreach ($rooms as $room) {
-            $items[] = new Room($room);
-        }
-
-        return $items;
-    }
-
-    /**
      * Create a Room.
      *
      * @param  string $name Create a Room.
@@ -155,6 +136,25 @@ class Client
     public function getRoom($id)
     {
         return new Room($this->get('rooms/'.$id));
+    }
+
+    /**
+     * Returns a list of all rooms in the current organization. The rooms are
+     * returned in sorted alphabetical order by default.
+     *
+     * @return array List of Room objects.
+     */
+    public function getRooms()
+    {
+        $rooms = $this->get('rooms');
+
+        $items = new Collection;
+
+        foreach ($rooms as $room) {
+            $items[] = new Room($room);
+        }
+
+        return $items;
     }
 
     /**
