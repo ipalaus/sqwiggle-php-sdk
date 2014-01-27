@@ -199,7 +199,7 @@ class Client
      *
      * @return boolean
      */
-    public function deleteInvite($id)
+    public function removeInvite($id)
     {
         return $this->delete('invites/'.$id);
     }
@@ -220,6 +220,84 @@ class Client
         }
 
         return $items;
+    }
+
+    /**
+     * Create a new message in an individual room, new messages will be pushed
+     * to connected clients. If a link is detected in the message then it will
+     * be parsed and appropriate attachments will be automatically
+     * generated - for example a link to a youtube video would generate an
+     * attachment of type 'Video' with corresponding fields.
+     *
+     * @param  integer      $room_id Room id.
+     * @param  string       $text    Text of the message.
+     * @param  string|null  $format  Set this parameter to 'html' to allow a subset of HTML tags in the message.
+     * @param  boolean      $parse   Whether links in the message should be converted to rich attachments.
+     *
+     * @return \Ipalaus\Sqwiggle\Message
+     */
+    public function createMessage($room_id, $text, $format = null, $parse = true)
+    {
+        $payload = array(
+            'room_id' => $room_id,
+            'text'    => $text,
+            'format'  => $format,
+            'parse'   => $parse,
+        );
+
+        return new Message($this->post('messages', $payload));
+    }
+
+    /**
+     * Retrieves the details of a message and any nested attachments.
+     *
+     * @param  integer $id Message id.
+     *
+     * @return \Ipalaus\Sqwiggle\Message
+     */
+    public function getMessage($id)
+    {
+        return new Message($this->get('messages/'.$id));
+    }
+
+    /**
+     * Updates the specified message by setting the values of the parameters
+     * passed. Note that changes made via the API will be immediately reflected
+     * in the interface of all connected clients.
+     *
+     * @param  integer $id   Message id.
+     * @param  string  $text Text of the message.
+     *
+     * @return \Ipalaus\Sqwiggle\Message
+     */
+    public function updateMessage($id, $text)
+    {
+        return new Message($this->put('messages/'.$id, array('text' => $text)));
+    }
+
+    /**
+     * Removes the specified message from the room, so that conversation flow is
+     * preserved the message will be replaced with a "This message has been
+     * removed" note in the stream.
+     *
+     * @param  integer $id Message id.
+     *
+     * @return boolean
+     */
+    public function removeMessage($id)
+    {
+        return $this->delete('messages/'.$id);
+    }
+
+    /**
+     * Returns all messages in the current organization across all rooms. The
+     * messages are returned in reverse date order by default.
+     *
+     * @return \Ipalaus\Sqwiggle\Collection
+     */
+    public function getMessages()
+    {
+        return $this->get('messages');
     }
 
     /**
@@ -330,7 +408,7 @@ class Client
      *
      * @return boolean
      */
-    public function deleteRoom($id)
+    public function removeRoom($id)
     {
         return $this->delete('rooms/'.$id);
     }
