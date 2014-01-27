@@ -38,6 +38,68 @@ class Client
     }
 
     /**
+     * Retrieves the details of a message attachment. There are many different
+     * types of attachments and each type may return different fields in the
+     * response.
+     *
+     * @param  integer $id Attachment id.
+     *
+     * @return \Ipalaus\Sqwiggle\Attachment
+     */
+    public function getAttachment($id)
+    {
+        return new Attachment($this->get('attachments/'.$id));
+    }
+
+    /**
+     * Updates the specified attachment by setting the values of the parameters
+     * passed. Note that changes made via the API will be immediately reflected
+     * in the interface of all connected clients.
+     *
+     * @param  integer $id      Attachment id.
+     * @param  array  $payload  Optional parameters to update: id, title, description, url, image, status
+     *
+     * @return \Ipalaus\Sqwiggle\Attachment
+     */
+    public function updateAttachment($id, $payload)
+    {
+        return new Attachment($this->put('attachments/'.$id, $payload));
+    }
+
+    /**
+     * Removes the specified attachment from the parent message. If this is the
+     * only attachment in the message then the parent message will also be
+     * removed.
+     *
+     * @param  integer $id Attachment id.
+     *
+     * @return boolean
+     */
+    public function removeAttachment($id)
+    {
+        return $this->delete('attachments/'.$id);
+    }
+
+    /**
+     * Returns a list of all attachments in the current organization. The
+     * attachments are returned in reverse date order by default.
+     *
+     * @return \Ipalaus\Sqwiggle\Colletion
+     */
+    public function getAttachments()
+    {
+        $attachments = $this->get('attachments');
+
+        $items = new Collection;
+
+        foreach ($attachments as $attachment) {
+            $items[] = new Attachment($attachment);
+        }
+
+        return $items;
+    }
+
+    /**
      * Retrieves the details of a specific conversation provided the
      * conversation is accessible via the provided token.
      *

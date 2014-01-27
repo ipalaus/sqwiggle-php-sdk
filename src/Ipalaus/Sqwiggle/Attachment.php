@@ -52,13 +52,6 @@ class Attachment
     public $image;
 
     /**
-     * The location at whih the attachment resides.
-     *
-     * @var  string
-     */
-    //public $url;
-
-    /**
      * If an upload, denotes the uploade status: pending or uploaded.
      *
      * @var  string
@@ -87,6 +80,29 @@ class Attachment
     public $updated_at;
 
     /**
+     * Create a new Attachment instance.
+     *
+     * @param array $attachment Attachment details.
+     */
+    public function __construct(array $attachment = array())
+    {
+        $this->id = $attachment['id'];
+        $this->url = $attachment['url'];
+        $this->title = $attachment['title'];
+        $this->dscription = isset($attachment['dscription']) ? $attachment['dscription'] : null;
+        $this->animated = isset($attachment['animated']) ? $attachment['animated'] : null;
+        $this->type = $attachment['type'];
+        $this->image = isset($attachment['image']) ? $attachment['image'] : null;
+        $this->status = $attachment['status'];
+        $this->width = isset($attachment['width']) ? $attachment['width'] : null;
+        $this->height = isset($attachment['height']) ? $attachment['height'] : null;
+        $this->size = isset($attachment['size']) ? $attachment['size'] : null;
+
+        //$this->setCreatedAt($attachment['created_at']);
+        //$this->setUpdatedAt($attachment['updated_at']);
+    }
+
+    /**
      * Create a DateTime object from the 'created_at' string.
      *
      * @param  string  $created_at  Datetime string.
@@ -103,7 +119,7 @@ class Attachment
      * @param  string  $updated_at  Datetime string.
      * @return void
      */
-    public function setCreatedAt($updated_at)
+    public function setUpdatedAt($updated_at)
     {
         $this->updated_at = new DateTime($updated_at);
     }
