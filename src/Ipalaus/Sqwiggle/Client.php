@@ -274,6 +274,52 @@ class Client
     }
 
     /**
+     * Retrieves the details of any user that the token has access to.
+     *
+     * @param  integer $id User id.
+     *
+     * @return \Ipalaus\Sqwiggle\User
+     */
+    public function getUser($id)
+    {
+        return new User($this->get('users/'.$id));
+    }
+
+    /**
+     * Updates the specified user by setting the values of the parameters
+     * passed. Any parameters not provided will be left unchanged, unrecognised
+     * parameters will result in the request returning an error response.
+     *
+     * @param  integer $id       User id.
+     * @param  array   $payload  Optional parameters to update: name, email, time_zone, avatar, status and message.
+     *
+     * @return \Ipalaus\Sqwiggle\User
+     */
+    public function updateUser($id, $payload)
+    {
+        return new User($this->put('users/'.$id, $payload));
+    }
+
+    /**
+     * Returns a list of all users in the current organization. The users are
+     * returned in sorted alphabetical order by default.
+     *
+     * @return \Ipalaus\Sqwiggle\Collection
+     */
+    public function getUsers()
+    {
+        $users = $this->get('users');
+
+        $items = new Collection;
+
+        foreach ($users as $user) {
+            $items[] = new User($user);
+        }
+
+        return $items;
+    }
+
+    /**
      * Send an authorized request and the response as an array.
      *
      * @param Guzzle\Http\Message\Request $request HTTP request class to send requests.

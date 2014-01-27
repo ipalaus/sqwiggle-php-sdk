@@ -113,6 +113,31 @@ class User
     public $avatar;
 
     /**
+     * Create a new User instance.
+     *
+     * @param array $user User details.
+     */
+    public function __construct(array $user = array())
+    {
+        $this->id = $user['id'];
+        $this->room_id = $user['room_id'];
+        $this->media = $user['media'];
+        $this->role = $user['role'];
+        $this->status = $user['status'];
+        $this->message = $user['message'];
+        $this->email = $user['email'];
+        $this->name = $user['name'];
+        $this->avatar = $user['avatar'];
+        $this->time_zone = $user['time_zone'];
+        $this->time_zone_offset = $user['time_zone_offset'];
+        //$this->confirmed = $user['confirmed'];
+
+        $this->setCreatedAt($user['created_at']);
+        $this->setLastActiveAt($user['last_active_at']);
+        $this->setLastConnectedAt($user['last_connected_at']);
+    }
+
+    /**
      * Create a DateTime object from the 'created_at' string.
      *
      * @param  string  $created_at  Datetime string.
@@ -129,7 +154,7 @@ class User
      * @param  string  $last_active_at  Datetime string.
      * @return void
      */
-    public function setCreatedAt($last_active_at)
+    public function setLastActiveAt($last_active_at)
     {
         $this->last_active_at = new DateTime($last_active_at);
     }
@@ -140,7 +165,7 @@ class User
      * @param  string  $last_connected_at  Datetime string.
      * @return void
      */
-    public function setCreatedAt($last_connected_at)
+    public function setLastConnectedAt($last_connected_at)
     {
         $this->last_connected_at = new DateTime($last_connected_at);
     }
