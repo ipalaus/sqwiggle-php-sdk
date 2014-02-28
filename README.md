@@ -1,4 +1,4 @@
-sqwiggle-php-sdk
+Sqwiggle PHP SDK
 ================
 
 Unofficial Sqwiggle SDK for PHP.
